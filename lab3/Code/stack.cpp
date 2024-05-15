@@ -161,7 +161,7 @@ Status CreateStack(SeqStack& S) {
     // 输入栈元素
     int data;
     cout << "请输入栈元素：" << endl;
-    /*string line;
+    string line;
     cin.ignore();
     getline(cin, line);
     cout << line << endl;
@@ -176,12 +176,12 @@ Status CreateStack(SeqStack& S) {
             // 将元素压入栈中
             *(S.top++) = data;
         }
-    }*/
-    cin >> data;
+    }
+    /*cin >> data;
     while (data != -1) {
         *(S.top++) = data;
         cin >> data;
-    }
+    }*/
     cout << "成功创建" << endl;
     return OK;
 }
@@ -210,7 +210,7 @@ void cout_star(){
 
 // 打印提示信息
 void show_help(){
-    int maxNumMsg = 11;
+    int maxNumMsg = 12;
     // star_NUM = 15,30,15
     for(int i = 0;i < 4;i++){
         cout_star();
@@ -229,6 +229,7 @@ void show_help(){
         "    9.输出栈内元素            ",
         "    10.创建并输入栈元素       ",
         "    11.退出                   ",
+        "    12.数制转换               "
     };
 
     for(int i = 0; i < maxNumMsg; i++){
@@ -244,6 +245,24 @@ void show_help(){
     cout << endl;
 }
 
+// 十进制转二进制
+void O2B(int num) {
+    int t = num;
+    SeqStack s;
+    InitStack(s);
+    while (num != 0) {
+        Push(s,num % 2);
+        num /= 2;
+    }
+    // Output(s);
+    cout << "数字" << t << "的二进制形式为：";
+    while (s.top != s.base) {
+        cout << *--s.top << " ";
+    }
+    cout << endl;
+}
+
+// 主函数
 int main()
 {
     show_help();
@@ -299,6 +318,11 @@ int main()
         case 11:
             exit(0);
             break;
+        case 12:
+            int num;
+            cout << "请输入想转换的十进制整数:";
+            cin >> num;
+            O2B(num);
         default:
             break;
         }

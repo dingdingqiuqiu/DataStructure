@@ -130,39 +130,134 @@ void PrintQueue(LinkQueue s) {
     }
     cout << endl;
 }
+// 打印'*'
+void cout_star(){
+    for(int i = 0;i < 15;i++){
+        cout << '*';
+    }
+}
 
+// 打印提示信息
+void show_help(){
+    int maxNumMsg = 11;
+    // star_NUM = 15,30,15
+    for(int i = 0;i < 4;i++){
+        cout_star();
+    }
+    cout << endl;
+
+    string s[maxNumMsg] = {
+        "    1.初始化队列              ",
+        "    2.销毁队列                ", 
+        "    3.清空队列                ",
+        "    4.判断队列是否为空        ",
+        "    5.返回队列中元素个数      ",
+        "    6.返回队列队头元素        ",
+        "    7.插入新的队尾元素        ",
+        "    8.删除队头元素            ",
+        "    9.初始化并创建队列        ",
+        "    10.输出队列元素           ",
+        "    11.退出                   ",
+    };
+
+    for(int i = 0; i < maxNumMsg; i++){
+        cout_star();
+        cout << s[i];
+        cout_star();
+        cout << endl;
+    }
+
+    for(int i = 0;i < 4;i++){
+        cout_star();
+    }
+    cout << endl;
+}
+
+// 主函数
 int main()
 {
+    show_help();
+    int chioce;
+    Elemtype e;
+    LinkQueue l;
+    l.front = NULL; l.rear = NULL;
+    QueueNode q;
+    q.next = NULL;
+    while (1)
+    {   
+        cout << "请输入选择：" ;
+        cin >> chioce;
+        switch (chioce)
+        {
+        case 1:
+            Init(&l);
+            cout << "初始化成功" << endl;
+            break;
+        case 2:
+            Destroy(&l);
+            cout << "成功销毁" << endl;
+            break;
+        case 3:
+            Clear(&l);
+            break;
+        case 4:
+            StackEmpty(S);
+            break;
+        case 5:
+            StackLength(S);
+            break;
+        case 6:
+            DataType e;
+            if (GetTop(S, e)) {
+                cout << "栈顶元素为：" << e << endl;
+            }
+            break;
+        case 7:
+            cout << "请输入要入栈的元素：";
+            cin >> e;
+            if (Push(S, e)) {
+                cout << "元素" << e << "已入栈" << endl;
+            }
+            break;
+        case 8:
+            if (Pop(S,e)) {
+                cout<<"元素" << e <<"已出栈" << endl;
+            }
+            break;
+        case 9:
+            Output(S);
+            break;
+        case 10:
+            CreateStack(S);
+            break;
+        case 11:
+            exit(0);
+            break;
+        case 12:
+            int num;
+            cout << "请输入想转换的十进制整数:";
+            cin >> num;
+            O2B(num);
+        default:
+            break;
+        }
+    }
+    return 0;
+}
+
+int main1()
+{
+    show_help();
     //声明一个节点类型的变量
     Elemtype e;
     //声明一个顺序队名字为s
     LinkQueue s;
     //对这个顺序队进行初始化
-    
-
     int choice;
-
-
-  
-        cout << "\n队列操作菜单:" << endl;
-        cout << "1. 初始化并创建队列" << endl;
-        cout << "2. 销毁队列" << endl;
-        cout << "3. 清空队列" << endl;
-        cout << "4. 判断队列是否为空" << endl;
-        cout << "5. 返回队列中元素个数" << endl;
-        cout << "6. 返回队列对头元素" << endl;
-        cout << "7. 插入新的队尾元素" << endl;
-        cout << "8. 删除对头元素" << endl;
-        cout << "9. 输出队列元素" << endl;
-        cout << "10. 退出" << endl;
-        cout << "请输入队列操作" << endl;
-
+    cout << "请输入选择：" << endl;
         while (true)
         {
             cin >> choice;
-
-
-
             switch (choice)
             {
             case 1:
