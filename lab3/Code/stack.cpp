@@ -11,6 +11,7 @@ typedef  struct {
     DataType* top;
     int stacksize;
 }SeqStack;
+
 // 扩展栈大小
 /*Status ExStack(SeqStack &S) {
     DataType* newbase = new DataType[S.stacksize + 10]; // 假设每次扩展10个元素的空间

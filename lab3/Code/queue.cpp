@@ -1,140 +1,227 @@
 #include <stdio.h>
-#include<iostream>
+#include <iostream>
 #include <stdlib.h>
 
 using namespace std;
 typedef int Elemtype;
-//声明一个结构体来表示节点
+
+#define MAXSIZE 1000
+
+// font == rear 为空
+// font -> next -> data 为首元素
+// rear -> data 为尾元素
+
+// 声明一个结构体来表示节点
 typedef struct Node
 {
-    Elemtype data;   //节点数据域
-    struct Node* next; //节点指针域
+    Elemtype data;   // 节点数据域
+    struct Node* next; // 节点指针域
 }QueueNode, * QueuePtr;
-//声明一个结构体来定义上面这个结构体的两个指针
+
+// 声明一个结构体来定义上面这个结构体的两个指针
 typedef struct
 {
-    QueueNode* front, * rear;//分别指向队首和队尾的指针
+    QueueNode* front, * rear;// 分别指向队首和队尾的指针
 }LinkQueue;
-//首先进行初始化
-void Init(LinkQueue* s)
-{
-    QueueNode* p;
-    p = (QueueNode*)malloc(sizeof(QueueNode));
-    p->next = NULL;
-    s->front = s->rear = p;
-}
-//判断队列是否为空,为空返回真1，不为空返回假0
-int Empty(LinkQueue s)
-{
-    //队空的条件是头指针和尾指针指向相同的地方
-    if (s.front == s.rear)
-    {
-        return 1;
+
+// 判断该队列是否被初始化
+bool isInit(LinkQueue l) {
+    bool flag = false;
+    if (l.front != NULL && l.rear != NULL) {
+        flag = true;
     }
-    return 0;
+    return flag;
 }
 
-//求队列长度
-int GetLength(LinkQueue s)
+// 判断该队列是否被初始化
+bool isInit(LinkQueue *ptrL) {
+    bool flag = false;
+    if (ptrL->front != NULL && ptrL->rear != NULL) {
+        flag = true;
+    }
+    return flag;
+}
+
+// 首先进行初始化
+void Init(LinkQueue* ptrL)
 {
-    //声明一个节点类型的指针
-    QueueNode* p;
-    //让p指向队列的头指针
-    p = s.front;
+    // 申请一个节点的空间，并将该节点指针域赋空，用ptrQ指向它
+    // 此时队列指针结构体队首队尾指向相同元素
+    QueuePtr ptrQ;
+    ptrQ = (QueuePtr)malloc(sizeof(QueueNode));
+    ptrQ->next = NULL;
+    ptrL->front = ptrL->rear = ptrQ;
+    cout << "初始化成功" << endl;
+    return;
+}
+
+// 判断队列是否为空,为空返回真1，不为空返回假0
+void Empty(LinkQueue l)
+{
+    if (!isInit(l)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
+    //队空的条件是头指针和尾指针指向相同的地方
+    if (l.front == l.rear)
+    {
+        cout << "队列为空" << endl;
+        return;
+    } else {
+        cout << "队列非空" << endl;
+        return;
+    }
+}
+
+// 求队列长度
+void GetLength(LinkQueue l)
+{
+    if (!isInit(l)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
+    //声明一个指向节点的指针ptrQ
+    QueuePtr ptrQ;
+    //让ptrQ指向队列的头指针
+    ptrQ = l.front;
     //声明一个变量用来记录队列当前长度
     int length = 0;
-    while (p->next)//当指针p所指的节点不为空时执行循环体
+    while (ptrQ->next)//当指针ptrQ所指的节点不为空时执行循环体
     {
         length++;
-        p = p->next;
+        ptrQ = ptrQ->next;
     }
-    return length;//返回当前队列的长度
+    cout << "队列中有" << length << "个元素" << endl;
+    return;
 }
-//入队操作
-void Add(LinkQueue* s, Elemtype x)
+
+// 入队操作
+void Add(LinkQueue* ptrL, Elemtype x)
 {
+    if (!isInit(ptrL)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
     //声明一个节点类型的指针变量用来存储要入队的元素
-    QueueNode* p;
-    p = (QueueNode*)malloc(sizeof(QueueNode));
-    if (!p) {
-        printf("内存分配失败\n\n");
+    QueuePtr ptrQ;
+    ptrQ = (QueuePtr)malloc(sizeof(QueueNode));
+    if (!ptrQ) {
+        printf("内存分配失败\n");
         return;
     }
-    p->data = x;        //指针指向的节点的数据域存放x
-    p->next = NULL;     //指针指向的节点的指针域置为空
-    s->rear->next = p;   //将队列的尾指针的指针域next指向指针p所指的节点
-    s->rear = p;         //将队列的尾指针向后移一位，指向刚入队的节点的位置
+    ptrQ->data = x;        //指针指向的节点的数据域存放x
+    ptrQ->next = NULL;     //指针指向的节点的指针域置为空
+    ptrL->rear->next = ptrQ;   //将队列的尾指针的指针域next指向指针p所指的节点
+    ptrL->rear = ptrQ;         //将队列的尾指针向后移一位，指向刚入队的节点的位置
+    cout << "元素" << x << "已被成功插入" << endl;
+    return;
 }
-//获取队首元素
-Elemtype GetTop(LinkQueue s)
+
+// 获取队首元素
+void GetTop(LinkQueue l)
 {
-    //首先判断队列是否为空
-    if (Empty(s))
-    {
-        printf("队列为空，无法获取队首元素\n\n");
-        return 0;
-    }
-    return s.front->next->data;//不为空的话就返回队首指针指向的第一个元素的数据域
-}
-//出队操作
-void Del(LinkQueue* s, Elemtype* e)
-{
-    //先判断队列是否为空
-    if (Empty(*s))
-    {
-        printf("当前队列为空，无法执行出队操作\n\n");
+    if (!isInit(l)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
         return;
     }
-    //用临时变量保存出队的元素
-    QueueNode* p;
-    p = s->front->next;
-    if (p == s->rear)
+    // 首先判断队列是否为空
+    if (l.front == l.rear)
     {
-        s->front = s->rear;
+        cout << "队列为空，无法获取队首元素" << endl;
+        return;
+    } else {
+        cout << "当前队列的队首元素为" << l.front->next->data << endl;
+        return;
     }
-    *e = p->data;
-    s->front->next = p->next;
-    free(p);
-
 }
 
+// 出队操作
+void Del(LinkQueue *ptrL)
+{
+    // 判断该队列是否被初始化
+    if (!isInit(ptrL)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
+    // 先判断队列是否为空
+    if (ptrL->front == ptrL->rear)
+    {
+        cout << "当前队列为空，无法执行出队操作" << endl;
+        return;
+    }
+    // 用临时变量保存出队的元素
+    // 队头出队，释放内存
+    QueueNode* ptrQ =  ptrL->front->next;
+    Elemtype e = ptrQ->data;
+    ptrL->front->next = ptrQ->next;
+    free(ptrQ);
+    cout << "元素" << e << "出队成功" << endl;
+}
 
 // 清空队列
-void Clear(LinkQueue* s) {
-    // 将队列中的所有元素依次出队，直到队列为空
-    while (!Empty(*s)) {
-        Del(s, NULL);
+void Clear(LinkQueue* ptrL) {
+    // 判断该队列是否被初始化
+    if (!isInit(ptrL)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
     }
+    // 将队列中的所有元素依次出队，直到队列为空
+    while (ptrL->front->next != NULL) {
+        QueueNode* ptrQ =  ptrL->front->next;
+        ptrL->front->next = ptrQ->next;
+        free(ptrQ);
+    }
+    if (ptrL->front->next == NULL) {
+        ptrL->rear = ptrL->front;
+    }
+    cout << "该队列已被清空" << endl;
+    return;
 }
-void Destroy(LinkQueue* s) {
+
+void Destroy(LinkQueue* ptrL) {
+    // 判断该队列是否被初始化
+    if (!isInit(ptrL)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
     // 先清空队列
-    Clear(s);
+    Clear(ptrL);
     // 释放队列头结点所占用的内存空间
-    free(s->front);
+    free(ptrL->front);
     // 将队列的头指针和尾指针置为空
-    s->front = s->rear = NULL;
+    ptrL->front = ptrL->rear = NULL;
+    cout << "该队列已被成功销毁" << endl;
+    return;
 }
+
 // 输出队列元素
-void PrintQueue(LinkQueue s) {
-    if (Empty(s)) {
+void PrintQueue(LinkQueue l) {
+    // 判断该队列是否被初始化
+    if (!isInit(l)) {
+        cout << "该队列还未初始化，请先将其初始化" << endl;
+        return;
+    }
+    if (l.front == l.rear) {
         cout << "队列为空，无法输出元素" << endl;
         return;
     }
-
     // 临时指针指向队列头结点的下一个节点
-    QueuePtr p = s.front->next;
+    QueuePtr ptrQ = l.front->next;
     cout << "队列元素为：" << endl;
-    while (p != NULL) {
-        cout << p->data << " ";
-        p = p->next;
+    while (ptrQ != NULL) {
+        cout << ptrQ->data << " ";
+        ptrQ = ptrQ->next;
     }
     cout << endl;
+    return;
 }
+
 // 打印'*'
 void cout_star(){
     for(int i = 0;i < 15;i++){
         cout << '*';
     }
+    return;
 }
 
 // 打印提示信息
@@ -171,139 +258,70 @@ void show_help(){
         cout_star();
     }
     cout << endl;
+    return;
 }
 
 // 主函数
 int main()
 {
+    // 打印提示信息
     show_help();
-    int chioce;
+    // 节点元素数据域
     Elemtype e;
+    // 定义一个队列指针结构体,两个元素，分别指向队首和队尾
     LinkQueue l;
-    l.front = NULL; l.rear = NULL;
-    QueueNode q;
-    q.next = NULL;
-    while (1)
-    {   
-        cout << "请输入选择：" ;
-        cin >> chioce;
-        switch (chioce)
-        {
-        case 1:
-            Init(&l);
-            cout << "初始化成功" << endl;
-            break;
-        case 2:
-            Destroy(&l);
-            cout << "成功销毁" << endl;
-            break;
-        case 3:
-            Clear(&l);
-            break;
-        case 4:
-            StackEmpty(S);
-            break;
-        case 5:
-            StackLength(S);
-            break;
-        case 6:
-            DataType e;
-            if (GetTop(S, e)) {
-                cout << "栈顶元素为：" << e << endl;
-            }
-            break;
-        case 7:
-            cout << "请输入要入栈的元素：";
-            cin >> e;
-            if (Push(S, e)) {
-                cout << "元素" << e << "已入栈" << endl;
-            }
-            break;
-        case 8:
-            if (Pop(S,e)) {
-                cout<<"元素" << e <<"已出栈" << endl;
-            }
-            break;
-        case 9:
-            Output(S);
-            break;
-        case 10:
-            CreateStack(S);
-            break;
-        case 11:
-            exit(0);
-            break;
-        case 12:
-            int num;
-            cout << "请输入想转换的十进制整数:";
-            cin >> num;
-            O2B(num);
-        default:
-            break;
-        }
-    }
-    return 0;
-}
-
-int main1()
-{
-    show_help();
-    //声明一个节点类型的变量
-    Elemtype e;
-    //声明一个顺序队名字为s
-    LinkQueue s;
-    //对这个顺序队进行初始化
+    l.front = l.rear = NULL;
+    // 选择信息
     int choice;
-    cout << "请输入选择：" << endl;
-        while (true)
+    while (true)
         {
+            cout << "请输入选择：";
             cin >> choice;
             switch (choice)
             {
             case 1:
-                Init(&s);
-                cout << "初始化成功" << endl;
+                Init(&l);
                 break;
             case 2:
-                Destroy(&s);
-                cout << "成功销毁" << endl;
+                Destroy(&l);
                 break;
             case 3:
-                Clear(&s);
-                cout << "成功清空" << endl;
+                Clear(&l);
                 break;
             case 4:
-                if (Empty(s) == 1)
-                {
-                    cout << "队列为空" << endl;
-                }
-                if (Empty(s) == 0)
-                {
-                    cout << "队列不为空" << endl;
-                }
+                Empty(l);
                 break;
             case 5:
-                cout << "队列中元素的个数：" << GetLength(s) << endl;
+                GetLength(l);
                 break;
             case 6:
-                e = GetTop(s);
-                if (e) {
-                    cout << "当前队列的队首元素为" << e << endl;
-                }
+                GetTop(l);
                 break;
             case 7:
-                cout << "要输入的元素：";
+                cout << "请输入要插入的队尾元素：";
                 cin >> e;
-                Add(&s, e);
+                Add(&l, e);
                 break;
             case 8:
-                Del(&s, &e);
-                cout << "删除成功";
+                Del(&l);
                 break;
             case 9:
-                PrintQueue(s);
+                Init(&l);
+                int n;
+                int a[MAXSIZE];
+                cout << "请输入要插入的元素个数:";
+                cin >> n;
+                for (int i = 0; i < n; i++) {
+                    cin >> a[i];
+                }
+                for (int i = 0; i < n; i++) {
+                    Add(&l,a[i]);
+                }
                 break;
             case 10:
+                PrintQueue(l);
+                break;
+            case 11:
                 exit(0);
                 break;
             default:
